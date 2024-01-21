@@ -14,8 +14,8 @@ export class PostController {
         const postData = req.body;
         const newPost = new Post( postData.title, postData.content, postData.date);
         try {
-            await this.postBL.addPost(newPost);
-            res.status(201).send({message: `Post created successfully`});
+            const postId = await this.postBL.addPost(newPost);
+            res.status(201).send({id: postId, message: `Post created successfully`});
         } catch (error) {
             res.status(400).send((error as Error).message);
         }
@@ -33,8 +33,8 @@ export class PostController {
 
     async getAllPosts(req: Request, res: Response): Promise<void> {
         try {
-            const from = req.query.from ? new Date(req.query.from as string) : undefined;
-            const to = req.query.to ? new Date(req.query.to as string) : undefined;
+            const from = req.query.from ? parseInt(req.query.from as string) : undefined;
+            const to = req.query.to ? parseInt(req.query.to as string) : undefined;
             const filterText = req.query.filterText ? req.query.filterText as string : undefined;
             const posts = await this.postBL.getAllPosts(from, to, filterText);
             res.status(200).send(posts);

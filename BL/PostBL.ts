@@ -8,9 +8,9 @@ export class PostBL {
         this.postDataAccess = postDataAccess;
     }
 
-    async addPost(post: Post): Promise<void> {
+    async addPost(post: Post): Promise<number> {
         try {
-            await this.postDataAccess.add(post);
+            return await this.postDataAccess.add(post);
         } catch (error) {
             throw new Error(`Unable to add Post: ${(error as Error).message}`);
         }
@@ -24,7 +24,7 @@ export class PostBL {
         return Post;
     }
 
-    async getAllPosts(from?: Date, to?: Date, filterText?: string ): Promise<Partial<Post>[]> {
+    async getAllPosts(from?: number, to?: number, filterText?: string ): Promise<Partial<Post>[]> {
         try {
             const posts = await this.postDataAccess.getAll(from, to, filterText);
             return posts;

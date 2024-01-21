@@ -3,10 +3,11 @@ import Post from '../models/Post';
 import {DataAccess} from './DataAccess';
 
 export class PostDataAccessSQL implements DataAccess<Post> {
-    async add(post: Post): Promise<void> {
+    async add(post: Post): Promise<number> {
         try {
-            const query = 'INSERT INTO posts (title, content, date) VALUES ($1, $2, $3)';
-            await pool.query(query, [post.title, post.content, post.date]);
+            const query = 'INSERT INTO posts (title, content, date) VALUES ($1, $2, $3) RETURNING id';
+            const result = await pool.query(query, [post.title, post.content, post.date]);
+            return result.rows[0].id;
         } catch (error) {
             console.error('Error adding post', error);
             throw error;
@@ -47,14 +48,10 @@ export class PostDataAccessSQL implements DataAccess<Post> {
         }
     }
 
-    async getAll(from?: Date, to?: Date, filterText?: string): Promise<Partial<Post>[]> {
-        if (to) {
-            to.setDate(to.getDate() + 1);
-        }
-
+    async getAll(from?: number, to?: number, filterText?: string): Promise<Partial<Post>[]> {
         if (filterText !== undefined && (from !== undefined && to !== undefined)) {
             const query = {
-                text: "SELECT * FROM posts WHERE (LOWER(title) LIKE LOWER($1) OR LOWER(content) LIKE LOWER($1)) AND date BETWEEN $2 AND $3",
+                text: "SELECT * FROM posts WHERE (LOWER(title) LIKE LOWER($1) OR LOWER(content) LIKE LOWER($1)) AND ORDER BY date DESC OFFSET $2 LIMIT $3",
                 values: [`%${filterText}%`, from, to]
             };
             try {
@@ -69,7 +66,7 @@ export class PostDataAccessSQL implements DataAccess<Post> {
 
         if (filterText !== undefined) {
             const query = {
-                text: "SELECT * FROM posts WHERE LOWER(title) LIKE LOWER($1) OR LOWER(content) LIKE LOWER($1)",
+                text: "SELECT * FROM posts WHERE LOWER(title) LIKE LOWER($1) OR LOWER(content) LIKE LOWER($1) ORDER BY date DESC",
                 values: [`%${filterText}%`],
             };
             try {
@@ -83,7 +80,7 @@ export class PostDataAccessSQL implements DataAccess<Post> {
 
         if (from !== undefined && to !== undefined) {
             const query = {
-                text: "SELECT * FROM posts WHERE date BETWEEN $1 AND $2",
+                text: "SELECT * FROM posts ORDER BY date DESC OFFSET $1 LIMIT $2",
                 values: [from, to]
             };
             const posts = await pool.query(query);
