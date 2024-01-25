@@ -12,6 +12,9 @@ describe('POST /api/posts', () => {
             .send({ title: 'Test Post', content: 'This is a test post', date:"2024-05-05" });
 
         expect(response.statusCode).toBe(201);
+
+        const dataAccess = new PostDataAccessSQL();
+        await dataAccess.delete(response.body.id);
     });
 });
 
@@ -24,6 +27,8 @@ describe('GET /api/posts/:id', () => {
 
         expect(response.statusCode).toBe(200);
         expect(response.body.id).toBe(postId);
+
+        await dataAccess.delete(response.body.id);
     });
 });
 
@@ -45,6 +50,8 @@ describe('PUT /api/posts/:id', () => {
             .send({ title: 'Updated Post', content: 'This is an updated post', date: "2024-07-05" });
 
         expect(response.statusCode).toBe(200);
+
+        await dataAccess.delete(postId);
     });
 });
 
