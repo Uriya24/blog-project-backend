@@ -15,7 +15,7 @@ export class PostController {
         const newPost = new Post( postData.title, postData.content, postData.date);
         try {
             const postId = await this.postBL.addPost(newPost);
-            res.status(201).send({id: postId, message: `Post created successfully`});
+            res.status(201).send({id: postId, message: `Post ${postId} created successfully`});
         } catch (error) {
             res.status(400).send((error as Error).message);
         }

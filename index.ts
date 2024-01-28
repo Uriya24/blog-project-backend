@@ -1,14 +1,16 @@
 import express from 'express';
 import cors from 'cors';
-// import activityLogger from './middlewares/activityLogger';
 import postsRoute from './routes/postsRoute';
+import usersRoute from "./routes/usersRoute";
 
 export const app = express();
 app.use(express.json());
 app.use(cors({
     origin:'http://localhost:3000'
 }));
-// app.use(activityLogger);
+
+
+app.use('/api/users', usersRoute);
 app.use("/api/posts", postsRoute);
 
 const port = 4000;
