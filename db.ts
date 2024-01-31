@@ -3,11 +3,12 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'blog',
+    ssl: true,
+    user: process.env.POSTGRES_USER,
+    host: process.env.POSTGRES_HOST,
+    database: process.env.POSTGRES_DB,
     password: process.env.POSTGRES_PASS,
-    port: 5432,
+    port: parseInt(process.env.POSTGRES_PORT!),
 });
 
 // async function connect() {
