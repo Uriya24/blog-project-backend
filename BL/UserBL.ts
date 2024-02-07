@@ -10,12 +10,12 @@ export class UserBL {
         this.userDataAccess = userDataAccess;
     }
 
-    async addUser(user: User): Promise<string> {
+    async addUser(user: User): Promise<object> {
         if (user.id === process.env.SUB) {
             user = {...user, admin : true }
         }
         try {
-            return await this.userDataAccess.add(user);
+            return await this.userDataAccess.addUser(user);
         } catch (error) {
             throw new Error(`Unable to add Post: ${(error as Error).message}`);
         }

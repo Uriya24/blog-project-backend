@@ -12,10 +12,9 @@ export class UserController {
 
     async addUser(req: Request, res: Response): Promise<void> {
         const userData = req.body;
-        const newUser = new User(userData.sub, userData.email, userData.name, false);
         try {
-            const resMessage = await this.userBL.addUser(newUser);
-            res.status(201).send({ message: resMessage });
+            const response = await this.userBL.addUser(userData);
+            res.status(201).send(response);
         } catch (error) {
             res.status(400).send((error as Error).message);
         }
