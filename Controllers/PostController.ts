@@ -39,12 +39,12 @@ export class PostController {
             const posts = await this.postBL.getAllPosts(from, to, filterText);
             res.status(200).send(posts);
         } catch (error) {
-            res.status(500).send((error as Error).message);
+            res.status(400).send((error as Error).message);
         }
     }
 
     async updatePost(req: Request, res: Response): Promise<void> {
-        const postId = +req.params.id;
+        const postId = parseInt(req.params.id);
         const postData = req.body;
         try {
             await this.postBL.updatePost(postId, postData);
@@ -55,7 +55,7 @@ export class PostController {
     }
 
     async deletePost(req: Request, res: Response): Promise<void> {
-        const postId = +req.params.id;
+        const postId = parseInt(req.params.id);
         try {
             await this.postBL.deletePost(postId);
             res.status(200).send({message: `Post ${postId} deleted successfully`});

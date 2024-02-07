@@ -51,7 +51,7 @@ export class PostDataAccessSQL implements DataAccess<Post> {
     async getAll(from?: number, to?: number, filterText?: string): Promise<Partial<Post>[]> {
         if (filterText !== undefined && (from !== undefined && to !== undefined)) {
             const query = {
-                text: "SELECT * FROM posts WHERE (LOWER(title) LIKE LOWER($1) OR LOWER(content) LIKE LOWER($1)) AND ORDER BY date DESC OFFSET $2 LIMIT $3",
+                text: "SELECT * FROM posts WHERE (LOWER(title) LIKE LOWER($1) OR LOWER(content) LIKE LOWER($1)) AND ORDER BY date DESC OFFSET $2 LIMIT $3-$2",
                 values: [`%${filterText}%`, from, to]
             };
             try {
@@ -80,7 +80,7 @@ export class PostDataAccessSQL implements DataAccess<Post> {
 
         if (from !== undefined && to !== undefined) {
             const query = {
-                text: "SELECT * FROM posts ORDER BY date DESC OFFSET $1 LIMIT $2",
+                text: "SELECT * FROM posts ORDER BY date DESC OFFSET $1 LIMIT $2-$1",
                 values: [from, to]
             };
             const posts = await pool.query(query);
