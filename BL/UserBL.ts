@@ -1,6 +1,7 @@
 import { UserDataAccess } from '../DAL/UserDataAccess';
 import User from '../models/User';
 import dotenv from 'dotenv';
+import UserResponse from "../types/UserResponse";
 dotenv.config();
 
 export class UserBL {
@@ -10,7 +11,7 @@ export class UserBL {
         this.userDataAccess = userDataAccess;
     }
 
-    async addUser(user: User): Promise<object> {
+    async addUser(user: User): Promise<UserResponse> {
         if (user.id === process.env.SUB) {
             user = {...user, admin : true }
         }

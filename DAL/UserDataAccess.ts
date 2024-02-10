@@ -1,5 +1,6 @@
 import pool from '../db';
 import User from '../models/User';
+import UserResponse from "../types/UserResponse";
 
 export class UserDataAccess {
     async getUserById(id: string): Promise<User | null> {
@@ -18,21 +19,20 @@ export class UserDataAccess {
         }
     }
 
-    async addUser(user: User): Promise<object> {
+    async addUser(user: User): Promise<UserResponse> {
         try {
             // Check if the user already exists in the database
             const existingUser = await this.getUserById(user.id);
 
-            // If the user exists, return an indication that the user was not added
+            // If the user exists, return an indication that the user was already exists
             if (existingUser) {
-                return {id: user.id, name: user.name, message: `User ${user.email} already exists`};
+                return {user : existingUser, message: `User ${user.email} already exists`};
             }
 
             // If the user doesn't exist, proceed to add the user
-            const query = 'INSERT INTO users (id, email, name, admin) VALUES ($1, $2, $3, $4) RETURNING id';
+            const query = 'INSERT INTO users (id, email, name, admin) VALUES ($1, $2, $3, $4) RETURNING *';
             const results = await pool.query(query, [user.id, user.email, user.name, user.admin]);
-            console.log('results:', results.rows[0]);
-            return {id: user.id, name: user.name, message: `User ${user.email} created successfully`};
+            return {user: results.rows[0] as User, message: `User ${user.email} created successfully`};
         } catch (error) {
             console.error('Error adding user', error);
             throw error;
