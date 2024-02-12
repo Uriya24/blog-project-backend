@@ -67,3 +67,21 @@ describe('DELETE /api/posts/:id', () => {
         expect(response.statusCode).toBe(200);
     });
 });
+
+describe('POST /api/posts', () => {
+    test('should return 400 for incomplete data', async () => {
+        const response = await request(app)
+            .post('/api/posts')
+            .send({ title: 'Test Post', content: 'This is a test post', date: "12/02" });
+
+        expect(response.statusCode).toBe(400);
+    });
+});
+
+describe('GET /api/posts/:id', () => {
+    test('should return 400 for a post that does not exist', async () => {
+        const response = await request(app).get(`/api/posts/0`);
+
+        expect(response.statusCode).toBe(400);
+    });
+});

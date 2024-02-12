@@ -66,7 +66,7 @@ export class PostDataAccessSQL implements DataAccess<Post> {
 
         if (filterText !== undefined) {
             const query = {
-                text: "SELECT * FROM posts WHERE LOWER(title) LIKE LOWER($1) OR LOWER(content) LIKE LOWER($1) ORDER BY date DESC",
+                text: "SELECT * FROM posts WHERE LOWER(title) LIKE LOWER($1) ORDER BY date DESC",
                 values: [`%${filterText}%`],
             };
             try {

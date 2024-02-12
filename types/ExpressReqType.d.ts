@@ -1,5 +1,4 @@
-//extending the Request interface to include a user property
-
+//extending the Express Request interface to include a user property
 import User from "../models/User";
 
 export {};

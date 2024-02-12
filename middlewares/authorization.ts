@@ -2,6 +2,7 @@ import {Request, Response, NextFunction} from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
 
+//verifying if the user is an admin by the jwt token that we send to the client as a cookie
 const isAdmin = (req: Request, res: Response, next: NextFunction) => {
     // Bypass authentication for testing environment
     if (process.env.NODE_ENV === 'test') {
