@@ -4,12 +4,14 @@ import {app} from '../index';
 import {PostDataAccessSQL} from "../DAL/PostDataAccessSQL";
 import Post from "../models/Post";
 
+const testPost = new Post('Test Post', 'This is a test post', new Date(), 'Test User');
+
 
 describe('POST /api/posts', () => {
     test('should add a new post', async () => {
         const response = await request(app)
             .post('/api/posts')
-            .send({ title: 'Test Post', content: 'This is a test post', date:"2024-05-05" });
+            .send(testPost);
 
         expect(response.statusCode).toBe(201);
 
@@ -21,7 +23,7 @@ describe('POST /api/posts', () => {
 describe('GET /api/posts/:id', () => {
     test('should get a specific post', async () => {
         const dataAccess = new PostDataAccessSQL();
-        const postId = await dataAccess.add(new Post('Test Post','This is a test post.', new Date()));
+        const postId = await dataAccess.add(testPost);
 
         const response = await request(app).get(`/api/posts/${postId}`);
 
@@ -43,7 +45,7 @@ describe('GET /api/posts', () => {
 describe('PUT /api/posts/:id', () => {
     test('should update a specific post', async () => {
         const dataAccess = new PostDataAccessSQL();
-        const postId = await dataAccess.add(new Post('Test Post','This is a test post.', new Date()));
+        const postId = await dataAccess.add(testPost);
 
         const response = await request(app)
             .put(`/api/posts/${postId}`)
@@ -58,7 +60,7 @@ describe('PUT /api/posts/:id', () => {
 describe('DELETE /api/posts/:id', () => {
     test('should delete a specific post', async () => {
         const dataAccess = new PostDataAccessSQL();
-        const postId = await dataAccess.add(new Post('Test Post','This is a test post.', new Date()));
+        const postId = await dataAccess.add(testPost);
 
         const response = await request(app).delete(`/api/posts/${postId}`);
 

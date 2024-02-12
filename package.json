@@ -26,6 +26,7 @@
     "ts-jest": "^29.1.1"
   },
   "scripts": {
+    "rebuild_db": "psql -U postgres -f rebuild_db.sql",
     "build": "tsc -p .",
     "start": "node dist/index.js",
     "test": "jest"

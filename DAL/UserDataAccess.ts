@@ -19,7 +19,7 @@ export class UserDataAccess {
         }
     }
 
-    async addUser(user: User): Promise<UserResponse> {
+    async logInUser(user: User): Promise<UserResponse> {
         try {
             // Check if the user already exists in the database
             const existingUser = await this.getUserById(user.id);
@@ -30,8 +30,8 @@ export class UserDataAccess {
             }
 
             // If the user doesn't exist, proceed to add the user
-            const query = 'INSERT INTO users (id, email, name, admin) VALUES ($1, $2, $3, $4) RETURNING *';
-            const results = await pool.query(query, [user.id, user.email, user.name, user.admin]);
+            const query = 'INSERT INTO users (id, email, name, first_name, admin) VALUES ($1, $2, $3, $4, $5) RETURNING *';
+            const results = await pool.query(query, [user.id, user.email, user.name, user.first_name, user.admin]);
             return {user: results.rows[0] as User, message: `User ${user.email} created successfully`};
         } catch (error) {
             console.error('Error adding user', error);

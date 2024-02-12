@@ -5,8 +5,8 @@ import {DataAccess} from './DataAccess';
 export class PostDataAccessSQL implements DataAccess<Post> {
     async add(post: Post): Promise<number> {
         try {
-            const query = 'INSERT INTO posts (title, content, date) VALUES ($1, $2, $3) RETURNING id';
-            const result = await pool.query(query, [post.title, post.content, post.date]);
+            const query = 'INSERT INTO posts (title, content, date, posted_by) VALUES ($1, $2, $3, $4) RETURNING id';
+            const result = await pool.query(query, [post.title, post.content, post.date, post.posted_by]);
             return result.rows[0].id;
         } catch (error) {
             console.error('Error adding post', error);
@@ -58,7 +58,7 @@ export class PostDataAccessSQL implements DataAccess<Post> {
                 const posts = await pool.query(query);
                 return posts.rows;
             } catch (e) {
-                console.log(e)
+                console.log("error fetching posts", e)
                 throw e
             }
 
@@ -73,7 +73,7 @@ export class PostDataAccessSQL implements DataAccess<Post> {
                 const posts = await pool.query(query);
                 return posts.rows;
             } catch (e) {
-                console.log(e)
+                console.log("error fetching posts", e)
                 throw e
             }
         }
@@ -83,12 +83,34 @@ export class PostDataAccessSQL implements DataAccess<Post> {
                 text: "SELECT * FROM posts ORDER BY date DESC OFFSET $1 LIMIT $2-$1",
                 values: [from, to]
             };
-            const posts = await pool.query(query);
-            return posts.rows;
-        } else {
-            const posts = await pool.query("SELECT * FROM posts ORDER BY date DESC")
-            return posts.rows
+            try {
+                const posts = await pool.query(query);
+                return posts.rows;
+            } catch (e) {
+                console.log("error fetching posts", e)
+                throw e
+            }
+        }
+
+        else {
+            try {
+                const posts = await pool.query("SELECT * FROM posts ORDER BY date DESC")
+                return posts.rows
+            } catch (e) {
+                console.log("error fetching posts", e)
+                throw e
+            }
         }
     }
 
+    async getNumberOfPosts(): Promise<number> {
+        try {
+            const query = 'SELECT COUNT(*) FROM posts';
+            const result = await pool.query(query);
+            return parseInt(result.rows[0].count);
+        } catch (error) {
+            console.error('Error fetching number of posts', error);
+            throw error;
+        }
+    }
 }

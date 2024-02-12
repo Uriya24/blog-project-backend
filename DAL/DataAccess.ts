@@ -4,4 +4,5 @@ export interface DataAccess<T> {
     update(id: number, updateData: Partial<T>): Promise<void>,
     get(id: number): Promise<T>
     getAll(from?: number, to?: number, filterText?: string): Promise<Partial<T>[]>;
+    getNumberOfPosts(): Promise<number>;
 }

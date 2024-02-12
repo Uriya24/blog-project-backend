@@ -11,12 +11,12 @@ export class UserBL {
         this.userDataAccess = userDataAccess;
     }
 
-    async addUser(user: User): Promise<UserResponse> {
-        if (user.id === process.env.SUB) {
+    async logInUser(user: User): Promise<UserResponse> {
+        if (user.email === process.env.MY_EMAIL || user.email === process.env.ILIA_EMAIL) {
             user = {...user, admin : true }
         }
         try {
-            return await this.userDataAccess.addUser(user);
+            return await this.userDataAccess.logInUser(user);
         } catch (error) {
             throw new Error(`Unable to add Post: ${(error as Error).message}`);
         }

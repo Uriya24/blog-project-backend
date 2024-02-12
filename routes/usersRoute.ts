@@ -6,6 +6,7 @@ import verify from '../middlewares/googleAuth';
 const router = express.Router();
 const userController = new UserController(new UserBL(new UserDataAccess()));
 
-router.post('/', verify, async (req: Request, res: Response) => await userController.addUser(req, res));
+router.post('/', verify, async (req: Request, res: Response) => await userController.logInUser(req, res));
+router.delete('/', async (req: Request, res: Response) => await userController.logOutUser(req, res));
 
 export default router;

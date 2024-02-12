@@ -11,5 +11,6 @@ router.get('/:id', async (req: Request, res: Response) => await postController.g
 router.get('/', async (req: Request, res: Response) => await postController.getAllPosts(req,res));
 router.put('/:id', isAdmin, async (req: Request, res: Response) => await postController.updatePost(req,res));
 router.delete('/:id', isAdmin, async (req: Request, res: Response) => await postController.deletePost(req,res));
+router.post('/count', async (req: Request, res: Response) => await postController.getNumberOfPosts(req,res));
 
 export default router;

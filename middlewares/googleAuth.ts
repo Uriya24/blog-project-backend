@@ -17,7 +17,7 @@ const verify = async(req: Request, res: Response, next: NextFunction) => {
         });
         console.log("ticket: --> ", ticket);
         const userData = ticket.getPayload()!;
-        req.user = new User(userData.sub, userData.email as string , userData.given_name as string, false);
+        req.user = new User(userData.sub, userData.email as string , userData.name as string, userData.given_name as string, false);
         next()
     } catch (error) {
         res.status(401).send("Unauthorized google user!");

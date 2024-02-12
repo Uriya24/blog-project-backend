@@ -12,7 +12,7 @@ export class PostController {
 
     async addPost(req: Request, res: Response): Promise<void> {
         const postData = req.body;
-        const newPost = new Post( postData.title, postData.content, postData.date);
+        const newPost = new Post( postData.title, postData.content, postData.date, postData.posted_by);
         try {
             const postId = await this.postBL.addPost(newPost);
             res.status(201).send({id: postId, message: `Post ${postId} created successfully`});
@@ -59,6 +59,15 @@ export class PostController {
         try {
             await this.postBL.deletePost(postId);
             res.status(200).send({message: `Post ${postId} deleted successfully`});
+        } catch (error) {
+            res.status(400).send((error as Error).message);
+        }
+    }
+
+    async getNumberOfPosts(req: Request, res: Response): Promise<void> {
+        try {
+            const numberOfPosts = await this.postBL.getNumberOfPosts();
+            res.status(200).send({numberOfPosts});
         } catch (error) {
             res.status(400).send((error as Error).message);
         }

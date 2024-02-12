@@ -48,4 +48,12 @@ export class PostBL {
             throw new Error(`Unable to delete Post: ${(error as Error).message}`);
         }
     }
+
+    async getNumberOfPosts(): Promise<number> {
+        try {
+            return await this.postDataAccess.getNumberOfPosts();
+        } catch (error) {
+            throw new Error(`Unable to get number of posts: ${(error as Error).message}`);
+        }
+    }
 }
